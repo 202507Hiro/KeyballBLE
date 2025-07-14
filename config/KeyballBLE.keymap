@@ -39,11 +39,18 @@
             label = "DIST_00INPUT";
         };
 
-        Mac_PrtSc: Mac_PrtSc {
+        Mac_PrtSc3: Mac_PrtSc {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp LEFT_COMMAND &kp LEFT_SHIFT &kp KP_NUMBER_3>;
+            bindings = <&kp LEFT_COMMAND &kp KP_NUMBER_3>;
             label = "MAC_PRTSC";
+        };
+
+        Mac_PrtSc4: Mac_PrtSc4 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&none>;
+            label = "MAC_PRTSC4";
         };
     };
 
@@ -124,7 +131,7 @@
 &kp TILDE  &kp EXCLAMATION  &kp AT_SIGN  &kp HASH  &kp PERCENT                      &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp UNDERSCORE    &kp KP_SUBTRACT    &kp PLUS
 &trans     &trans           &trans       &trans    &trans       &trans      &trans  &trans                &trans                 &trans            &kp ASTERISK       &kp EQUAL
 &trans     &trans           &trans       &trans    &trans       &trans      &trans  &trans                &trans                 &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &trans
-&trans     &trans           &Mac_PrtSc   &trans    &trans       &trans      &trans  &trans                                                                            &trans
+&trans     &Mac_PrtSc3      &Mac_PrtSc4  &trans    &trans       &trans      &trans  &trans                                                                            &trans
             >;
         };
 
