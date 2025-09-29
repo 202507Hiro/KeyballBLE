@@ -32,11 +32,6 @@
             bindings = <&kp CLCK>;
             key-positions = <4 3>;
         };
-
-        ctrl_hidarishita {
-            bindings = <&kp LCTRL>;
-            key-positions = <34 35>;
-        };
     };
 
     macros {
