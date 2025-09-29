@@ -22,11 +22,6 @@
             bindings = <&kp DOUBLE_QUOTES>;
             key-positions = <20 21>;
         };
-
-        Esc_Q+W {
-            bindings = <&kp ESC>;
-            key-positions = <0 1>;
-        };
     };
 
     macros {
