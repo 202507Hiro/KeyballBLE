@@ -27,11 +27,6 @@
             bindings = <&kp ESC>;
             key-positions = <0 1>;
         };
-
-        Caps_R+T {
-            bindings = <&kp CLCK>;
-            key-positions = <4 3>;
-        };
     };
 
     macros {
