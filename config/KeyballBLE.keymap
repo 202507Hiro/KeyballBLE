@@ -27,6 +27,11 @@
             bindings = <&kp ESC>;
             key-positions = <0 1>;
         };
+
+        ctrl {
+            bindings = <&kp LCTRL>;
+            key-positions = <34 35>;
+        };
     };
 
     macros {
