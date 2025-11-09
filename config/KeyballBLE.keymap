@@ -88,8 +88,8 @@
             bindings = <
 &kp Q               &kp W         &kp E             &kp R                      &kp T                                              &kp Y          &kp U  &kp I      &kp O    &kp P
 &kp A               &kp S         &kp D             &kp F                      &kp G      &mkp LCLK                  &kp DELETE   &kp H          &kp J  &kp K      &kp L    &kp SEMI
-&lt 5 Z             &kp X         &kp C             &kp V                      &kp B      &mt NUMBER_4 NUMBER_3      &lt 6 MINUS  &kp N          &kp M  &kp COMMA  &kp DOT  &lt 5 SINGLE_QUOTE
-&mt LEFT_SHIFT TAB  &kp LEFT_ALT  &kp LEFT_COMMAND  &lt_to_layer_0 3 CAPSLOCK  &kp SPACE  &kp ENTER                  &kp ENTER    &kp BACKSPACE                             &lt 1 SLASH
+&lt 5 Z             &kp X         &kp C             &kp V                      &kp B      &mt NUMBER_4 NUMBER_3      &lt 1 MINUS  &kp N          &kp M  &kp COMMA  &kp DOT  &lt 5 SINGLE_QUOTE
+&mt LEFT_SHIFT TAB  &kp LEFT_ALT  &kp LEFT_COMMAND  &lt_to_layer_0 3 CAPSLOCK  &kp SPACE  &kp ENTER                  &kp ENTER    &kp BACKSPACE                             &lt 6 SLASH
             >;
 
             sensor-bindings = <&ROTATE SCRL_DOWN SCRL_UP>;
@@ -97,10 +97,10 @@
 
         Num+FUNCTION {
             bindings = <
-&kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &kp PERCENT  &kp SLASH                          &kp F1  &kp F2  &kp F3  &kp F4   &kp F5
-&kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp ASTRK    &kp KP_MINUS  &trans      &kp F13  &kp F6  &kp F7  &kp F8  &kp F9   &kp F10
-&kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp PLUS     &kp KP_EQUAL  &trans      &kp A    &trans  &trans  &trans  &kp F11  &kp F12
-&kp KP_NUMBER_0  &DIST_00input    &kp DOT          &kp COLON    &trans        &trans      &trans   &trans                           &trans
+&kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &kp PERCENT  &kp SLASH                                    &trans         &trans    &kp UP_ARROW  &trans     &trans
+&kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp ASTRK    &kp KP_MINUS  &trans             &kp DELETE  &trans         &kp LEFT  &kp DOWN      &kp RIGHT  &trans
+&kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp PLUS     &kp KP_EQUAL  &kp BACKSPACE      &trans      &trans         &trans    &trans        &trans     &trans
+&kp KP_NUMBER_0  &DIST_00input    &kp DOT          &kp COLON    &kp SPACE     &kp ENTER          &kp ENTER   &kp BACKSPACE                                     &trans
             >;
         };
 
@@ -115,10 +115,10 @@
 
         YAJIRUSHI {
             bindings = <
-&kp ESCAPE      &kp LC(LS(TAB))         &kp UP_ARROW    &kp LC(TAB)              &trans                       &kp ESC  &trans    &kp UP    &kp PRINTSCREEN  &kp HOME
-&kp HOME        &kp LEFT_ARROW          &kp DOWN_ARROW  &kp RIGHT_ARROW          &kp END  &trans      &trans  &trans   &kp LEFT  &kp DOWN  &kp RIGHT        &kp END
-&kp LEFT_SHIFT  &kp LG(LS(LEFT_ARROW))  &trans          &kp LG(LS(RIGHT_ARROW))  &trans   &trans      &trans  &trans   &trans    &trans    &trans           &kp PG_UP
-&trans          &trans                  &trans          &trans                   &trans   &trans      &trans  &trans                                        &kp PG_DN
+&kp F1   &kp F2   &kp F3  &kp F4  &kp F5                        &kp ESC  &trans    &kp UP    &kp PRINTSCREEN  &kp HOME
+&kp F6   &kp F7   &kp F8  &kp F9  &kp F10  &kp F11      &trans  &trans   &kp LEFT  &kp DOWN  &kp RIGHT        &kp END
+&kp F12  &kp F13  &trans  &trans  &trans   &trans       &trans  &trans   &trans    &trans    &trans           &kp PG_UP
+&trans   &trans   &trans  &trans  &trans   &trans       &trans  &trans                                        &kp PG_DN
             >;
 
             sensor-bindings = <&inc_dec_kp LC(PAGE_UP) LC(PAGE_DOWN)>;
