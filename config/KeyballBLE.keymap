@@ -23,7 +23,7 @@
             key-positions = <20 21>;
         };
 
-        Esc {
+        esc {
             bindings = <&kp ESC>;
             key-positions = <0 1>;
             slow-release;
