@@ -82,7 +82,7 @@
             bindings = <
 &kp Q            &kp W         &kp E              &kp R                       &kp T                         &kp Y        &kp U      &kp I      &kp O        &kp P
 &kp A            &kp S         &kp D              &kp F                       &kp G   &mkp LCLK   &kp DELETE     &kp H        &kp J      &kp K      &kp L        &kp SEMI
-&lt 5 Z          &kp X         &kp C              &kp V                       &kp B   &mt NUMBER_4 NUMBER_3   &lt 1 MINUS    &kp N        &kp M      &kp COMMA  &kp DOT      &lt 5 SINGLE_QUOTE
+&lt 5 Z          &kp X         &kp C              &kp V                       &kp B   &mt LS(LG(N4)) LS(LG(N3))   &lt 1 MINUS    &kp N        &kp M      &kp COMMA  &kp DOT      &lt 5 SINGLE_QUOTE
 &mt LEFT_SHIFT TAB   &kp LEFT_ALT   &kp LEFT_COMMAND   &lt_to_layer_0 3 CAPSLOCK   &kp SPACE   &kp ENTER   &kp ENTER      &kp BACKSPACE   &lt 6 SLASH
             >;
 
@@ -111,12 +111,13 @@
         };
 
         // ============ 3: 矢印・Fキー ============
+        // Fキーを1つずつ左下へ / Bの右隣に Shift / コピー・ペースト・カットを追加
         YAJIRUSHI {
             bindings = <
-&kp F1    &kp F2    &kp F3   &kp F4   &kp F5     &kp ESC   &trans   &kp UP     &kp PRINTSCREEN   &kp HOME
-&kp F6    &kp F7    &kp F8   &kp F9   &kp F10    &kp F11   &trans   &trans     &kp LEFT   &kp DOWN   &kp RIGHT   &kp END
-&kp F12   &kp F13   &trans   &trans   &trans     &trans    &trans   &trans     &trans   &trans   &trans   &kp PG_UP
-&trans    &trans    &trans   &trans   &trans     &trans    &trans   &trans     &kp PG_DN
+&kp F1    &kp F2    &kp F3    &kp F4   &kp F5     &kp LG(C)   &trans      &kp UP     &kp LG(C)   &kp LG(V)
+&kp F6    &kp F7    &kp F8    &kp F9   &kp F10   &trans           &kp HOME   &kp LG(V)   &kp LEFT   &kp DOWN   &kp RIGHT   &kp LG(X)
+&kp F11   &kp F12   &kp F13   &trans   &trans    &kp LEFT_SHIFT   &kp END     &kp LG(X)   &trans   &trans   &trans   &kp PG_UP
+&trans    &trans    &trans    &trans   &trans    &trans     &trans      &trans      &kp PG_DN
             >;
 
             sensor-bindings = <&inc_dec_kp LC(PAGE_UP) LC(PAGE_DOWN)>;
