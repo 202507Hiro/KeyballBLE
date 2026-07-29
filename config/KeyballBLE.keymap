@@ -48,7 +48,7 @@
             key-positions = <0 1>;
             slow-release;
             timeout-ms = <300>;
-            layers = <0>;
+            layers = <0 7>;
         };
 
         ctrl {
@@ -56,12 +56,21 @@
             key-positions = <8 9>;
             slow-release;
             timeout-ms = <300>;
-            layers = <0>;
+            layers = <0 7>;
         };
 
+        // Macモードのみ: R + T で CapsLock（日本語⇔英数）
         caps {
             bindings = <&kp CLCK>;
             key-positions = <3 4>;
+            layers = <0>;
+        };
+
+        // Windowsモードのみ: R + T で 半角/全角
+        win_hanzen {
+            bindings = <&kp JP_HANZEN>;
+            key-positions = <3 4>;
+            layers = <7>;
         };
 
         // Windowsモードのときだけ有効: B + 右隣 で 範囲選択スクリーンショット
@@ -70,6 +79,17 @@
             key-positions = <26 27>;
             timeout-ms = <150>;
             layers = <7>;
+        };
+    };
+
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+
+        // Windowsモードで記号層(10)に入ったとき、スクロール判定用のレイヤー5も一緒に有効にする
+        // 記号は10が優先されるのでJISのまま。ドライバから見ると「5に滞在中」になりスクロールが働く
+        win_scroll {
+            if-layers = <10>;
+            then-layer = <5>;
         };
     };
 
