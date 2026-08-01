@@ -73,7 +73,15 @@
             layers = <7>;
         };
 
-        // Windowsモードのときだけ有効: B + 右隣 で 範囲選択スクリーンショット
+        // Macモードのみ: B + 右隣 → 単押し=全画面 / 長押し=範囲選択
+        mac_shot {
+            bindings = <&ss_tap_hold LS(LG(N4)) LS(LG(N3))>;
+            key-positions = <26 27>;
+            timeout-ms = <150>;
+            layers = <0>;
+        };
+
+        // Windowsモードのみ: B + 右隣 で 範囲選択スクリーンショット
         win_snip {
             bindings = <&kp LG(LS(S))>;
             key-positions = <26 27>;
@@ -155,6 +163,27 @@
             tapping-term-ms = <200>;
         };
 
+        // B+右隣コンボ用: 単押し=全画面スクショ / 長押し=範囲選択スクショ
+        ss_tap_hold: ss_tap_hold {
+            compatible = "zmk,behavior-hold-tap";
+            label = "SS_TAP_HOLD";
+            bindings = <&kp>, <&kp>;
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "tap-preferred";
+        };
+
+        // 無変換キー用: 単押し=無変換 / 長押し=Windowsキー
+        // 誤爆防止のため判定を300msと長めにしてある
+        muhenkan_win: muhenkan_win {
+            compatible = "zmk,behavior-hold-tap";
+            label = "MUHENKAN_WIN";
+            bindings = <&kp>, <&kp>;
+            #binding-cells = <2>;
+            tapping-term-ms = <300>;
+            flavor = "tap-preferred";
+        };
+
         ROTATE: ROTATE {
             compatible = "zmk,behavior-sensor-rotate-var";
             label = "ROTATE";
@@ -173,7 +202,7 @@
             bindings = <
 &kp Q            &kp W         &kp E              &kp R                       &kp T                             &kp Y        &kp U      &kp I      &kp O        &kp P
 &kp A            &kp S         &kp D              &kp F                       &kp G   &mkp LCLK           &kp DELETE    &kp H        &kp J      &kp K      &kp L        &kp SEMI
-&lt 5 Z          &kp X         &kp C              &kp V                       &kp B   &mt LS(LG(N4)) LS(LG(N3))   &lt 1 MINUS   &kp N        &kp M      &kp COMMA  &kp DOT      &lt 5 SINGLE_QUOTE
+&lt 5 Z          &kp X         &kp C              &kp V                       &kp B   &mt UNDERSCORE COLON        &lt 1 MINUS   &kp N        &kp M      &kp COMMA  &kp DOT      &lt 5 SINGLE_QUOTE
 &mt LEFT_SHIFT TAB   &kp LEFT_ALT   &kp LEFT_COMMAND   &lt_to_layer_0 3 CAPSLOCK   &kp SPACE   &kp ENTER   &kp ENTER     &kp BACKSPACE   &lt 6 SLASH
             >;
 
@@ -249,8 +278,8 @@
             bindings = <
 &trans     &trans   &trans   &trans   &trans          &trans        &trans   &trans   &trans   &trans
 &trans     &trans   &trans   &trans   &trans   &trans          &trans        &trans   &trans   &trans   &trans   &trans
-&lt 10 Z   &trans   &trans   &trans   &trans   &kp LEFT_GUI    &lt 8 MINUS   &trans   &trans   &trans   &trans   &lt 10 JP_QUOTE
-&trans     &trans   &kp LEFT_CONTROL   &lt 11 JP_HANZEN   &trans   &kp INT5   &trans   &trans   &trans
+&lt 10 Z   &trans   &trans   &trans   &trans   &mt JP_UNDERSCORE JP_COLON   &lt 8 MINUS   &trans   &trans   &trans   &trans   &lt 10 JP_QUOTE
+&trans     &trans   &kp LEFT_CONTROL   &lt 11 JP_HANZEN   &trans   &muhenkan_win LEFT_GUI INT5   &trans   &trans   &trans
             >;
         };
 
