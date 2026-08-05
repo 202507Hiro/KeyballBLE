@@ -26,17 +26,15 @@
             layers = <0>;
         };
 
+        // R + T で Ctrl
+        // 直前に打鍵があると発火しない ＝ 英字入力中の tr / rt 誤爆を防ぐ
         ctrl {
             bindings = <&kp LCTRL>;
-            key-positions = <8 9>;
-            slow-release;
-            timeout-ms = <300>;
-            layers = <0>;
-        };
-
-        caps {
-            bindings = <&kp CLCK>;
             key-positions = <3 4>;
+            slow-release;
+            timeout-ms = <150>;
+            require-prior-idle-ms = <150>;
+            layers = <0>;
         };
 
         // B + 右隣 → 単押し=全画面スクショ / 長押し=範囲選択スクショ
