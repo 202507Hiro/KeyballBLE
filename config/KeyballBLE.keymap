@@ -9,6 +9,31 @@
 #define SCROLL 5
 #define NUM 6
 
+// ============================================================
+//  JIS(日本語配列)設定のPC で正しい記号を出すための変換定義
+// ============================================================
+#define JP_HANZEN     GRAVE              // 半角/全角
+#define JP_UNDERSCORE LS(0x87)           // _
+#define JP_QUOTE      AMPERSAND          // '
+#define JP_DQUOTE     AT                 // "
+#define JP_AMPERSAND  CARET              // &
+#define JP_AT         LEFT_BRACKET       // @
+#define JP_COLON      SINGLE_QUOTE       // :
+#define JP_PLUS       COLON              // +
+#define JP_ASTERISK   DOUBLE_QUOTES      // *
+#define JP_CARET      EQUAL              // ^
+#define JP_EQUAL      UNDERSCORE         // =
+#define JP_TILDE      PLUS               // ~
+#define JP_YEN        0x89               // \ (¥)
+#define JP_PIPE       LS(0x89)           // |
+#define JP_LBRACKET   RIGHT_BRACKET      // [
+#define JP_RBRACKET   BACKSLASH          // ]
+#define JP_LBRACE     RIGHT_BRACE        // {
+#define JP_RBRACE     PIPE               // }
+#define JP_LPAREN     ASTERISK           // (
+#define JP_RPAREN     LEFT_PARENTHESIS   // )
+#define JP_BACKQUOTE  LEFT_BRACE         // `
+
 &mt {
     flavor = "balanced";
     quick-tap-ms = <0>;
@@ -23,7 +48,7 @@
             key-positions = <0 1>;
             slow-release;
             timeout-ms = <300>;
-            layers = <0>;
+            layers = <0 7>;
         };
 
         // Z + X で Shift+Tab（Excelで左のセルへ / 前の項目へ戻る）
@@ -31,10 +56,10 @@
             bindings = <&kp LS(TAB)>;
             key-positions = <22 23>;
             timeout-ms = <200>;
-            layers = <0>;
+            layers = <0 7>;
         };
 
-        // R + T で Ctrl
+        // Macモードのみ: R + T で Ctrl
         // 直前に打鍵があると発火しない ＝ 英字入力中の tr / rt 誤爆を防ぐ
         ctrl {
             bindings = <&kp LCTRL>;
@@ -45,12 +70,20 @@
             layers = <0>;
         };
 
-        // B + 右隣 → 単押し=全画面スクショ / 長押し=範囲選択スクショ
+        // Macモードのみ: B + 右隣 → 単押し=全画面 / 長押し=範囲選択
         mac_shot {
             bindings = <&ss_tap_hold LS(LG(N4)) LS(LG(N3))>;
             key-positions = <26 27>;
             timeout-ms = <150>;
             layers = <0>;
+        };
+
+        // Windowsモードのみ: B + 右隣 で 範囲選択スクリーンショット
+        win_snip {
+            bindings = <&kp LG(LS(S))>;
+            key-positions = <26 27>;
+            timeout-ms = <150>;
+            layers = <7>;
         };
     };
 
@@ -67,6 +100,43 @@
             #binding-cells = <0>;
             bindings = <&kp NUMBER_0 &kp NUMBER_0>;
             label = "DIST_00INPUT";
+        };
+
+        // BT0 = 会社Windows : 接続 → 一度レイヤーを0に戻してから Windows差分(7)を重ねる
+        bt_win: bt_win {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&bt BT_SEL 0 &to 0 &tog 7>;
+            label = "BT_WIN";
+        };
+
+        // BT1-4 = Mac / iPad / iPhone : 接続 → レイヤー0だけの状態に戻す
+        bt_mac1: bt_mac1 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&bt BT_SEL 1 &to 0>;
+            label = "BT_MAC1";
+        };
+
+        bt_mac2: bt_mac2 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&bt BT_SEL 2 &to 0>;
+            label = "BT_MAC2";
+        };
+
+        bt_mac3: bt_mac3 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&bt BT_SEL 3 &to 0>;
+            label = "BT_MAC3";
+        };
+
+        bt_mac4: bt_mac4 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&bt BT_SEL 4 &to 0>;
+            label = "BT_MAC4";
         };
     };
 
@@ -89,6 +159,17 @@
             flavor = "tap-preferred";
         };
 
+        // 無変換キー用: 単押し=無変換 / 長押し=Windowsキー
+        // 誤爆防止のため判定を300msと長めにしてある
+        muhenkan_win: muhenkan_win {
+            compatible = "zmk,behavior-hold-tap";
+            label = "MUHENKAN_WIN";
+            bindings = <&kp>, <&kp>;
+            #binding-cells = <2>;
+            tapping-term-ms = <300>;
+            flavor = "tap-preferred";
+        };
+
         ROTATE: ROTATE {
             compatible = "zmk,behavior-sensor-rotate-var";
             label = "ROTATE";
@@ -101,20 +182,20 @@
     keymap {
         compatible = "zmk,keymap";
 
-        // ============ 0: ベース ============
+        // ============ 0: ベース（常に有効） ============
+        // Bの右隣: 単押し=Shift+Cmd+3(全画面) / 長押し=Shift+Cmd+4(範囲)
         default_layer {
             bindings = <
-&kp Q            &kp W         &kp E              &kp R                       &kp T                         &kp Y        &kp U      &kp I      &kp O        &kp P
-&kp A            &kp S         &kp D              &kp F                       &kp G   &mkp LCLK   &kp DELETE     &kp H        &kp J      &kp K      &kp L        &kp SEMI
-&lt 5 Z          &kp X         &kp C              &kp V                       &kp B   &mt UNDERSCORE COLON        &lt 1 MINUS    &kp N        &kp M      &kp COMMA  &kp DOT      &lt 5 SINGLE_QUOTE
-&mt LEFT_SHIFT TAB   &kp LEFT_ALT   &kp LEFT_COMMAND   &lt_to_layer_0 3 CAPSLOCK   &kp SPACE   &kp ENTER   &kp ENTER      &kp BACKSPACE   &lt 6 SLASH
+&kp Q            &kp W         &kp E              &kp R                       &kp T                             &kp Y        &kp U      &kp I      &kp O        &kp P
+&kp A            &kp S         &kp D              &kp F                       &kp G   &mkp LCLK           &kp DELETE    &kp H        &kp J      &kp K      &kp L        &kp SEMI
+&lt 5 Z          &kp X         &kp C              &kp V                       &kp B   &mt UNDERSCORE COLON        &lt 1 MINUS   &kp N        &kp M      &kp COMMA  &kp DOT      &lt 5 SINGLE_QUOTE
+&mt LEFT_SHIFT TAB   &kp LEFT_ALT   &kp LEFT_COMMAND   &lt_to_layer_0 3 CAPSLOCK   &kp SPACE   &kp ENTER   &kp ENTER     &kp BACKSPACE   &lt 6 SLASH
             >;
 
             sensor-bindings = <&ROTATE SCRL_DOWN SCRL_UP>;
         };
 
-        // ============ 1: テンキー+ファンクション ============
-        // 数字を通常キーに変更（IMEの変換窓に入るので 123097 → 123,097 が可能）
+        // ============ 1: テンキー+ファンクション (Mac) ============
         Num_FUNCTION {
             bindings = <
 &kp NUMBER_7   &kp NUMBER_8   &kp NUMBER_9   &kp PERCENT   &kp SLASH        &trans   &trans   &kp UP_ARROW   &trans   &trans
@@ -124,7 +205,7 @@
             >;
         };
 
-        // ============ 2: 記号 ============
+        // ============ 2: 記号 (Mac) ============
         NUM {
             bindings = <
 &kp MINUS   &kp NUMBER_7   &kp NUMBER_8   &kp NUMBER_9   &kp PLUS       &kp CARET   &kp AMPERSAND   &kp TILDE   &kp LEFT_PARENTHESIS   &kp RIGHT_PARENTHESIS
@@ -134,8 +215,8 @@
             >;
         };
 
-        // ============ 3: 矢印・Fキー ============
-        // Fキーを1つずつ左下へ / Bの右隣に Shift / コピー・ペースト・カットを追加
+        // ============ 3: 矢印・Fキー (Mac) ============
+        // コピー/ペースト/カットは ⌘ で動作
         YAJIRUSHI {
             bindings = <
 &kp F1    &kp F2    &kp F3    &kp F4   &kp F5     &kp LG(C)   &trans      &kp UP     &kp LG(C)   &kp LG(V)
@@ -147,17 +228,17 @@
             sensor-bindings = <&inc_dec_kp LC(PAGE_UP) LC(PAGE_DOWN)>;
         };
 
-        // ============ 4: マウス ============
+        // ============ 4: マウス (共用) ============
         MOUSE {
             bindings = <
 &trans     &trans      &trans      &trans      &trans      &trans      &trans   &trans   &trans   &trans
 &mkp MB4   &mkp LCLK   &mkp MCLK   &mkp RCLK   &mkp MB5    &mkp LCLK   &trans   &mkp MB4   &mkp LCLK   &mkp MCLK   &mkp RCLK   &mkp MB5
 &trans     &trans      &trans      &trans      &trans      &mkp RCLK   &trans   &trans   &trans   &trans   &trans   &trans
-&kp LEFT_SHIFT   &trans   &kp LEFT_COMMAND   &trans   &trans   &trans   &trans   &trans   &trans
+&kp LEFT_SHIFT   &trans   &trans   &trans   &trans   &trans   &trans   &trans   &trans
             >;
         };
 
-        // ============ 5: 記号 (HIROKI) ============
+        // ============ 5: 記号 HIROKI (Mac) ============
         HIROKI {
             bindings = <
 &kp TILDE   &kp EXCLAMATION   &kp AT_SIGN   &kp HASH   &kp PERCENT   &kp LEFT_PARENTHESIS   &kp RIGHT_PARENTHESIS   &kp KP_EQUAL   &kp KP_MINUS   &kp PLUS
@@ -167,15 +248,68 @@
             >;
         };
 
-        // ============ 6: Bluetooth切替 ============
-        // 危険キーを小指の端へ退避。&bootloader は削除（本体のリセットボタンで代用）
+        // ============ 6: Bluetooth切替 (共用) ============
         layer_6 {
             bindings = <
-&trans   &trans   &trans   &trans   &trans     &bt BT_SEL 0   &bt BT_SEL 1   &bt BT_SEL 2   &bt BT_SEL 3   &bt BT_SEL 4
+&trans   &trans   &trans   &trans   &trans     &bt_win   &bt_mac1   &bt_mac2   &bt_mac3   &bt_mac4
 &trans   &trans   &trans   &trans   &trans   &trans     &studio_unlock   &trans   &trans   &trans   &trans   &bt BT_CLR
 &trans   &kp NUMBER_1   &kp NUMBER_2   &kp NUMBER_3   &kt KP_N4   &trans     &trans   &trans   &trans   &trans   &trans   &bt BT_CLR_ALL
 &trans   &trans   &trans   &trans   &trans     &trans   &trans   &trans   &trans
             >;
+        };
+
+        // ============ 7: Windows差分（レイヤー0の上に重ねる） ============
+        // 変わるところだけ。それ以外は素通しなので、下の層がそのまま出る
+        WIN_OVERLAY {
+            bindings = <
+&trans     &trans   &trans   &trans   &trans          &trans        &trans   &trans   &trans   &trans
+&trans     &trans   &trans   &trans   &trans   &trans          &trans        &trans   &trans   &trans   &trans   &trans
+&lt 10 Z   &trans   &trans   &trans   &trans   &mt JP_UNDERSCORE JP_COLON   &lt 8 MINUS   &trans   &trans   &trans   &trans   &lt 10 JP_QUOTE
+&trans     &trans   &kp LEFT_CONTROL   &lt 11 JP_HANZEN   &trans   &muhenkan_win LEFT_GUI INT5   &trans   &trans   &trans
+            >;
+        };
+
+        // ============ 8: テンキー+ファンクション (Windows/JIS) ============
+        WIN_NUMFUNC {
+            bindings = <
+&kp NUMBER_7   &kp NUMBER_8   &kp NUMBER_9   &kp PERCENT        &kp SLASH        &trans   &trans   &kp UP_ARROW   &trans   &trans
+&kp NUMBER_4   &kp NUMBER_5   &kp NUMBER_6   &kp JP_ASTERISK    &kp KP_MINUS   &trans   &kp DELETE   &trans   &kp LEFT   &kp DOWN   &kp RIGHT   &trans
+&kp NUMBER_1   &kp NUMBER_2   &kp NUMBER_3   &kp JP_PLUS        &kp KP_EQUAL   &kp BACKSPACE   &trans   &kp INT4   &kp INT5   &trans   &trans   &trans
+&kp NUMBER_0   &DIST_00input  &kp DOT        &kp JP_COLON       &kp SPACE   &kp ENTER   &kp ENTER   &kp BACKSPACE   &trans
+            >;
+        };
+
+        // ============ 9: 記号 (Windows/JIS) ============
+        WIN_NUM {
+            bindings = <
+&kp MINUS   &kp NUMBER_7   &kp NUMBER_8   &kp NUMBER_9   &kp JP_PLUS        &kp JP_CARET   &kp JP_AMPERSAND   &kp JP_TILDE   &kp JP_LPAREN   &kp JP_RPAREN
+&kp SLASH   &kp NUMBER_4   &kp NUMBER_5   &kp NUMBER_6   &kp JP_ASTERISK    &kp LC(LA(KP_NUMBER_0))   &kp A   &kp EXCLAMATION   &kp JP_AT   &kp HASH   &kp DOLLAR   &kp PERCENT
+&mt LEFT_SHIFT NUMBER_0   &kp NUMBER_1   &kp NUMBER_2   &kp NUMBER_3   &kp PERIOD   &kp JP_EQUAL   &trans   &kp JP_LBRACKET   &kp JP_RBRACKET   &kp JP_LBRACE   &kp JP_RBRACE   &kp JP_YEN
+&trans   &trans   &trans   &trans   &trans   &trans   &trans   &trans   &kp JP_PIPE
+            >;
+        };
+
+        // ============ 10: 記号 HIROKI (Windows/JIS) ============
+        WIN_HIROKI {
+            bindings = <
+&kp JP_TILDE   &kp EXCLAMATION   &kp JP_AT   &kp HASH   &kp PERCENT   &kp JP_LPAREN   &kp JP_RPAREN   &kp KP_EQUAL   &kp KP_MINUS   &kp JP_PLUS
+&trans   &trans   &trans   &trans   &trans   &trans   &trans   &kp JP_UNDERSCORE   &trans   &trans   &kp JP_ASTERISK   &kp JP_COLON
+&trans   &trans   &trans   &trans   &trans   &trans   &trans   &trans   &trans   &kp JP_LBRACKET   &kp JP_RBRACKET   &kp JP_DQUOTE
+&trans   &trans   &trans   &trans   &trans   &trans   &trans   &trans   &kp QMARK
+            >;
+        };
+
+        // ============ 11: 矢印・Fキー (Windows) ============
+        // コピー/ペースト/カットは Ctrl で動作
+        WIN_YAJIRUSHI {
+            bindings = <
+&kp F1    &kp F2    &kp F3    &kp F4   &kp F5     &kp LC(C)   &trans      &kp UP     &kp LC(C)   &kp LC(V)
+&kp F6    &kp F7    &kp F8    &kp F9   &kp F10   &trans           &kp HOME   &kp LC(V)   &kp LEFT   &kp DOWN   &kp RIGHT   &kp LC(X)
+&kp F11   &kp F12   &kp F13   &trans   &trans    &kp LEFT_SHIFT   &kp END     &kp LC(X)   &trans   &trans   &trans   &kp PG_UP
+&trans    &trans    &trans    &trans   &trans    &trans     &trans      &trans      &kp PG_DN
+            >;
+
+            sensor-bindings = <&inc_dec_kp LC(PAGE_UP) LC(PAGE_DOWN)>;
         };
     };
 };
