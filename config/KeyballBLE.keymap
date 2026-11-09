@@ -45,6 +45,15 @@
             layers = <0>;
         };
 
+        // Q + P で 強制終了ウィンドウ（Cmd+Option+Esc）
+        // 左右の手を使うので誤爆しない。出てしまっても Esc で閉じられる
+        force_quit {
+            bindings = <&kp LG(LA(ESC))>;
+            key-positions = <0 9>;
+            timeout-ms = <150>;
+            layers = <0>;
+        };
+
         // B + 右隣 → 単押し=全画面スクショ / 長押し=範囲選択スクショ
         mac_shot {
             bindings = <&ss_tap_hold LS(LG(N4)) LS(LG(N3))>;
@@ -60,6 +69,16 @@
             #binding-cells = <1>;
             bindings = <&to 0 &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
             label = "TO_LAYER_0";
+        };
+
+        // 音声入力: Ctrl を素早く2回。間隔を40msに固定して確実に2回と認識させる
+        dictation: dictation {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <40>;
+            tap-ms = <40>;
+            bindings = <&kp LCTRL &kp LCTRL>;
+            label = "DICTATION";
         };
 
         DIST_00input: DIST_00input {
@@ -105,9 +124,9 @@
         default_layer {
             bindings = <
 &kp Q            &kp W         &kp E              &kp R                       &kp T                         &kp Y        &kp U      &kp I      &kp O        &kp P
-&kp A            &kp S         &kp D              &kp F                       &kp G   &mkp LCLK   &kp DELETE     &kp H        &kp J      &kp K      &kp L        &kp SEMI
+&kp A            &kp S         &kp D              &kp F                       &kp G   &kp LEFT_ALT   &kp DELETE     &kp H        &kp J      &kp K      &kp L        &kp SEMI
 &lt 5 Z          &kp X         &kp C              &kp V                       &kp B   &mt UNDERSCORE COLON        &lt 1 MINUS    &kp N        &kp M      &kp COMMA  &kp DOT      &lt 5 SINGLE_QUOTE
-&mt LEFT_SHIFT TAB   &kp LEFT_ALT   &kp LEFT_COMMAND   &lt_to_layer_0 3 CAPSLOCK   &kp SPACE   &kp ENTER   &kp ENTER      &kp BACKSPACE   &lt 6 SLASH
+&mt LEFT_SHIFT TAB   &dictation   &kp LEFT_COMMAND   &lt_to_layer_0 3 CAPSLOCK   &kp SPACE   &kp LG(ENTER)   &kp ENTER      &kp BACKSPACE   &lt 6 SLASH
             >;
 
             sensor-bindings = <&ROTATE SCRL_DOWN SCRL_UP>;
@@ -136,6 +155,8 @@
 
         // ============ 3: 矢印・Fキー ============
         // Fキーを1つずつ左下へ / Bの右隣に Shift / コピー・ペースト・カットを追加
+        // このレイヤーに居る間はトラックボールが精密モード（1/4の速さ）になる
+        //   → 指定は KeyballBLE_R.overlay の snipe-layers 側
         YAJIRUSHI {
             bindings = <
 &kp F1    &kp F2    &kp F3    &kp F4   &kp F5     &kp LG(C)   &trans      &kp UP     &kp LG(C)   &kp LG(V)
