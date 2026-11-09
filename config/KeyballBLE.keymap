@@ -70,6 +70,24 @@
             layers = <0>;
         };
 
+        // Macモードのみ: Q + P で 強制終了ウィンドウ（Cmd+Option+Esc）
+        // 左右の手を使うので誤爆しない。出てしまっても Esc で閉じられる
+        force_quit {
+            bindings = <&kp LG(LA(ESC))>;
+            key-positions = <0 9>;
+            timeout-ms = <150>;
+            layers = <0>;
+        };
+
+        // Windowsモードのみ: Q + P で タスクマネージャー（Ctrl+Shift+Esc）
+        // Macの強制終了と同じ指の動きで、固まったアプリを終わらせる画面を出す
+        win_task_manager {
+            bindings = <&kp LC(LS(ESC))>;
+            key-positions = <0 9>;
+            timeout-ms = <150>;
+            layers = <7>;
+        };
+
         // Macモードのみ: B + 右隣 → 単押し=全画面 / 長押し=範囲選択
         mac_shot {
             bindings = <&ss_tap_hold LS(LG(N4)) LS(LG(N3))>;
@@ -87,12 +105,33 @@
         };
     };
 
+    // Windowsモードの精密モード用:
+    // 日英キー長押し(11)の番号がマウス層(4)より大きいため、そのままだと S・F が F7・F9 になる。
+    // 11 と 4 が両方有効なときだけ、マウスのクリックを一番上(12)に出す（Macはマウス層4のほうが矢印層3より大きいので不要）
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+        win_precision_click {
+            if-layers = <4 11>;
+            then-layer = <12>;
+        };
+    };
+
     macros {
         to_layer_0: to_layer_0 {
             compatible = "zmk,behavior-macro-one-param";
             #binding-cells = <1>;
             bindings = <&to 0 &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
             label = "TO_LAYER_0";
+        };
+
+        // 音声入力（Macモードのみ）: Ctrl を素早く2回。間隔を40msに固定して確実に2回と認識させる
+        dictation: dictation {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <40>;
+            tap-ms = <40>;
+            bindings = <&kp LCTRL &kp LCTRL>;
+            label = "DICTATION";
         };
 
         DIST_00input: DIST_00input {
@@ -184,12 +223,14 @@
 
         // ============ 0: ベース（常に有効） ============
         // Bの右隣: 単押し=Shift+Cmd+3(全画面) / 長押し=Shift+Cmd+4(範囲)
+        // エンコーダー押し込み=Option / 左薬指の一番下=音声入力 / 左手側のEnter=Cmd+Enter
+        // （Windowsモードでは、この3つはレイヤー7で元の動作に戻している）
         default_layer {
             bindings = <
 &kp Q            &kp W         &kp E              &kp R                       &kp T                             &kp Y        &kp U      &kp I      &kp O        &kp P
-&kp A            &kp S         &kp D              &kp F                       &kp G   &mkp LCLK           &kp DELETE    &kp H        &kp J      &kp K      &kp L        &kp SEMI
+&kp A            &kp S         &kp D              &kp F                       &kp G   &kp LEFT_ALT        &kp DELETE    &kp H        &kp J      &kp K      &kp L        &kp SEMI
 &lt 5 Z          &kp X         &kp C              &kp V                       &kp B   &mt UNDERSCORE COLON        &lt 1 MINUS   &kp N        &kp M      &kp COMMA  &kp DOT      &lt 5 SINGLE_QUOTE
-&mt LEFT_SHIFT TAB   &kp LEFT_ALT   &kp LEFT_COMMAND   &lt_to_layer_0 3 CAPSLOCK   &kp SPACE   &kp ENTER   &kp ENTER     &kp BACKSPACE   &lt 6 SLASH
+&mt LEFT_SHIFT TAB   &dictation   &kp LEFT_COMMAND   &lt_to_layer_0 3 CAPSLOCK   &kp SPACE   &kp LG(ENTER)   &kp ENTER     &kp BACKSPACE   &lt 6 SLASH
             >;
 
             sensor-bindings = <&ROTATE SCRL_DOWN SCRL_UP>;
@@ -217,6 +258,7 @@
 
         // ============ 3: 矢印・Fキー (Mac) ============
         // コピー/ペースト/カットは ⌘ で動作
+        // このレイヤーに居る間はトラックボールが1/4の速さ（KeyballBLE_R.overlay の precision で指定）
         YAJIRUSHI {
             bindings = <
 &kp F1    &kp F2    &kp F3    &kp F4   &kp F5     &kp LG(C)   &trans      &kp UP     &kp LG(C)   &kp LG(V)
@@ -260,12 +302,13 @@
 
         // ============ 7: Windows差分（レイヤー0の上に重ねる） ============
         // 変わるところだけ。それ以外は素通しなので、下の層がそのまま出る
+        // エンコーダー押し込み=左クリック / 左薬指の一番下=Alt は、Windowsでは従来どおり
         WIN_OVERLAY {
             bindings = <
 &trans     &trans   &trans   &trans   &trans          &trans        &trans   &trans   &trans   &trans
-&trans     &trans   &trans   &trans   &trans   &trans          &trans        &trans   &trans   &trans   &trans   &trans
+&trans     &trans   &trans   &trans   &trans   &mkp LCLK       &trans        &trans   &trans   &trans   &trans   &trans
 &lt 10 Z   &trans   &trans   &trans   &trans   &mt JP_UNDERSCORE JP_COLON   &lt 8 MINUS   &trans   &trans   &trans   &trans   &lt 10 JP_QUOTE
-&trans     &trans   &kp LEFT_CONTROL   &lt 11 JP_HANZEN   &trans   &muhenkan_win LEFT_GUI INT5   &trans   &trans   &trans
+&trans     &kp LEFT_ALT   &kp LEFT_CONTROL   &lt 11 JP_HANZEN   &trans   &muhenkan_win LEFT_GUI INT5   &trans   &trans   &trans
             >;
         };
 
@@ -301,6 +344,7 @@
 
         // ============ 11: 矢印・Fキー (Windows) ============
         // コピー/ペースト/カットは Ctrl で動作
+        // このレイヤーに居る間はトラックボールが1/4の速さ（KeyballBLE_R.overlay の precision で指定）
         WIN_YAJIRUSHI {
             bindings = <
 &kp F1    &kp F2    &kp F3    &kp F4   &kp F5     &kp LC(C)   &trans      &kp UP     &kp LC(C)   &kp LC(V)
@@ -310,6 +354,18 @@
             >;
 
             sensor-bindings = <&inc_dec_kp LC(PAGE_UP) LC(PAGE_DOWN)>;
+        };
+
+        // ============ 12: 精密モード中のクリック (Windows) ============
+        // 自分では入らない。上の conditional_layers で、11 と 4 が両方有効なときだけ自動で出る
+        // 中身はマウス層(4)の2・3段目と同じ。それ以外は素通し
+        WIN_PRECISION_CLICK {
+            bindings = <
+&trans     &trans      &trans      &trans      &trans      &trans      &trans   &trans   &trans   &trans
+&mkp MB4   &mkp LCLK   &mkp MCLK   &mkp RCLK   &mkp MB5    &mkp LCLK   &trans   &mkp MB4   &mkp LCLK   &mkp MCLK   &mkp RCLK   &mkp MB5
+&trans     &trans      &trans      &trans      &trans      &mkp RCLK   &trans   &trans   &trans   &trans   &trans   &trans
+&trans     &trans      &trans      &trans      &trans      &trans      &trans   &trans   &trans
+            >;
         };
     };
 };
