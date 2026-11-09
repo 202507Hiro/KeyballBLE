@@ -59,8 +59,29 @@
         irq-gpios = <&gpio0 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
         automouse-layer = <4>;
         scroll-layers = <5 10>;
-        snipe-layers = <3>;
+        
     };
 };
+// ===== 精密モード：日英キー長押し（レイヤー3）の間だけ、カーソルを1/4の速さに =====
+// ZMK本体の仕組みで判定するので、マウス層(4)が上に重なっていても効く
+#include <zephyr/dt-bindings/input/input-event-codes.h>
 
+/ {
+    input_processors {
+        zip_precision: zip_precision {
+            compatible = "zmk,input-processor-scaler";
+            #input-processor-cells = <2>;
+            type = <INPUT_EV_REL>;
+            codes = <INPUT_REL_X INPUT_REL_Y>;
+            track-remainders;
+        };
+    };
+
+    trackball_listener {
+        precision {
+            layers = <3>;
+            input-processors = <&zip_precision 1 4>;
+        };
+    };
+};
 
